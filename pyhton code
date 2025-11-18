@@ -1,1 +1,28 @@
+from bs4 import BeautifulSoup
+
+class NewsScraper:
+    def __init__(self, html_path):
+        self.html_path = html_path
+        self.headlines = []
+
+    def load_html(self):
+        with open(self.html_path, 'r', encoding='utf-8') as file:
+            self.soup = BeautifulSoup(file, 'html.parser')
+
+    def extract_headlines(self):
+        self.headlines = [h.text.strip() for h in self.soup.find_all('h3')]
+
+    def save_headlines(self, out_path='headlines.txt'):
+        with open(out_path, 'w', encoding='utf-8') as file:
+            for headline in self.headlines:
+                file.write(headline + '\n')
+        print(f"Saved to {out_path}")
+
+    def run(self):
+        self.load_html()
+        self.extract_headlines()
+        self.save_headlines()
+
+scraper = NewsScraper('news_sample.html')
+scraper.run()
 
